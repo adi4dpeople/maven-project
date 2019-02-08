@@ -7,5 +7,12 @@ pipeline {
                 sh "docker build . -t tomcatwebapp:${env.BUILD_ID}"
             }
         }
+        stage('Push to ACR'){
+            steps{
+                withCredentials([azureServicePrincipal('AzureSP')]) {
+                    sh 'docker push'
+                }
+            }
+        }
     }
 }
