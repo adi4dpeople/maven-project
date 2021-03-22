@@ -1,17 +1,14 @@
 pipeline {
-    agent any
+    agent { dockerfile true 
+    args '-v $HOME/.m2:/root/.m2' }
+    tools { 
+        maven 'maven' 
+        jdk 'java8' 
+    }
     stages {
-        stage('Build'){
-            steps{
-                sh 'mvn clean package'
-                sh "docker build . -t tomcatwebapp:${env.BUILD_ID}"
-            }
-        }
-        stage('Push to ACR'){
-            steps{
-                withCredentials([azureServicePrincipal('AzureSP')]) {
-                    sh 'docker push'
-                }
+        stage('Test') {
+            steps {
+                sh 'mvn --version'
             }
         }
     }
